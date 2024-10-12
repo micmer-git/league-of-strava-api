@@ -1,0 +1,84 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: auto; }
+        .header { text-align: center; }
+        .user-info, .activities { margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <p>Welcome, {{ athlete.firstname }} {{ athlete.lastname }}!</p>
+            <p>Email: {{ athlete.email }}</p>
+            <p>Profile: <a href="{{ athlete.profile }}" target="_blank">View Profile</a></p>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
+        <div class="user-info">
+            <h2>Interesting User Data</h2>
+            <ul>
+                <li>City: {{ athlete.city }}</li>
+                <li>State: {{ athlete.state }}</li>
+                <li>Country: {{ athlete.country }}</li>
+                <li>Sex: {{ athlete.sex }}</li>
+                <li>Weight: {{ athlete.weight }} kg</li>
+                <li>Maximum Heart Rate: {{ athlete.max_heart_rate }}</li>
+                <li>FTP: {{ athlete.ftp }}</li>
+                <li>Bio: {{ athlete.bio }}</li>
+                <li>Created At: {{ athlete.created_at }}</li>
+                <li>Updated At: {{ athlete.updated_at }}</li>
+                <!-- Add more fields as desired -->
+            </ul>
+        </div>
+
+        <div class="activities">
+            <h2>Last 5 Activities</h2>
+            {% if activities %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Distance (km)</th>
+                            <th>Moving Time</th>
+                            <th>Elapsed Time</th>
+                            <th>Total Elevation Gain (m)</th>
+                            <th>Start Date</th>
+                            <th>Average Speed (km/h)</th>
+                            <th>Max Speed (km/h)</th>
+                            <th>Average Heart Rate (bpm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in activities %}
+                            <tr>
+                                <td>{{ activity.name }}</td>
+                                <td>{{ activity.type }}</td>
+                                <td>{{ "%.2f" | format(activity.distance / 1000) }}</td>
+                                <td>{{ activity.moving_time // 60 }} mins</td>
+                                <td>{{ activity.elapsed_time // 60 }} mins</td>
+                                <td>{{ activity.total_elevation_gain }}</td>
+                                <td>{{ activity.start_date_local }}</td>
+                                <td>{{ "%.2f" | format(activity.average_speed * 3.6) }}</td>
+                                <td>{{ "%.2f" | format(activity.max_speed * 3.6) }}</td>
+                                <td>{{ activity.average_heartrate if activity.average_heartrate else 'N/A' }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No recent activities found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
